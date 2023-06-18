@@ -1,5 +1,7 @@
 Downloads
 versions.json
+temp_versions.json
+logs
 **/__pycache__
 **/pyc
 .VSCodeCounter

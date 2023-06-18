@@ -112,7 +112,7 @@ def get_server_address(url, data_key, downloaded=False, download_path='', file_n
                 log('版本'+version+'地址'+_download_link)
 
                 if downloaded==True:
-                    if os.path.exists(download_path+'/'+filename):
+                    if os.path.exists(download_path+os.sep+filename):
                         log(f"文件 {filename} 已存在,跳过下载",1)
                     else:
                         # 定义文件名和保存路径
@@ -148,7 +148,7 @@ def get_server_address(url, data_key, downloaded=False, download_path='', file_n
 
                     log(f'已下载 {filename} ')
                 
-                    ordered_data[version] = ip_adress+'/'+filename
+                    ordered_data[version] = ip_adress+os.sep+filename
                     # 更新下载链接
                     #_data.clear()
                     _data.update(ordered_data)
@@ -206,7 +206,7 @@ def download_latest_builds(project_id, data_key, is_download=False, download_pat
 
         if is_download==True:
             # 检查文件是否已存在
-            if os.path.exists(download_path+'/'+filename):
+            if os.path.exists(download_path+os.sep+filename):
                 log(f"文件 {filename} 已存在,跳过下载",1)
             else:
                 # 定义文件名和保存路径
@@ -227,7 +227,7 @@ def download_latest_builds(project_id, data_key, is_download=False, download_pat
                         # 删除旧构建文件
                         os.remove(f"{project_id}-{version}-{old_build}.jar")
                         log(f"已删除旧构建文件 {project_id}-{version}-{old_build}.jar")
-            ordered_data[version] = ip_adress+'/'+filename
+            ordered_data[version] = ip_adress+os.sep+filename
             # 更新下载链接
             #_data.clear()
             _data.update(ordered_data)
@@ -299,7 +299,7 @@ def download_latest_builds_purpur(data_key, is_download=False, download_path='',
                         # 删除旧构建文件
                         os.remove(f"purpur-{version}-{old_build}.jar")
                         log(f"已删除旧构建文件 purpur-{version}-{old_build}.jar")
-            ordered_data[version] = ip_adress+'/'+filename
+            ordered_data[version] = ip_adress+os.sep+filename
             # 更新下载链接
             #_data.clear()
             _data.update(ordered_data)
@@ -316,7 +316,7 @@ def download_latest_builds_purpur(data_key, is_download=False, download_path='',
     log('服务端下载/更新完成')
         
 def download_latest_build_forge(data_key):
-    with open('html/msl/CC/versions.json', 'r', encoding='utf-8') as file:
+    with open(PATH_TO_VERSIONLIST, 'r', encoding='utf-8') as file:
         data = json.load(file)
     _data = data[data_key]
     # 创建有序字典来存储版本号和下载链接，并按照自定义的比较函数进行排序
@@ -342,7 +342,7 @@ def download_latest_build_forge(data_key):
 
         # Step 6: 使用下载链接进行后续操作
         # 下载或处理Forge安装文件，根据你的需求进行相应的操作
-        print('版本'+minecraft_version+'地址'+download_url)
+        log('版本'+minecraft_version+'地址'+download_url)
         _data[minecraft_version] = download_url
         # 更新下载链接
         #_data.clear()
@@ -351,11 +351,11 @@ def download_latest_build_forge(data_key):
     data[data_key] = ordered_data  # 将修改后的数据存回原始数据字典中
     
     # 写入更新后的 JSON 文件
-    with open('html/msl/CC/versions.json', 'w', encoding='utf-8') as file:
+    with open(PATH_TO_VERSIONLIST, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 def download_latest_build_fabric(data_key):
-    with open('html/msl/CC/versions.json', 'r', encoding='utf-8') as file:
+    with open(PATH_TO_VERSIONLIST, 'r', encoding='utf-8') as file:
         data = json.load(file)
     _data = data[data_key]
     # 创建有序字典来存储版本号和下载链接，并按照自定义的比较函数进行排序
@@ -390,7 +390,7 @@ def download_latest_build_fabric(data_key):
 
         # Step 6: 使用下载链接进行后续操作
         # 下载或处理Fabric安装文件，根据你的需求进行相应的操作
-        print('版本'+minecraft_version+'地址'+download_url)
+        log('版本'+minecraft_version+'地址'+download_url)
         ordered_data[minecraft_version] = download_url
         # 更新下载链接
         #_data.clear()
@@ -399,11 +399,11 @@ def download_latest_build_fabric(data_key):
     data[data_key] = _ordered_data  # 将修改后的数据存回原始数据字典中
     
     # 写入更新后的 JSON 文件
-    with open('html/msl/CC/versions.json', 'w', encoding='utf-8') as file:
+    with open(PATH_TO_VERSIONLIST, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 def download_latest_build_mohist(data_key, is_download=False, download_path='', ip_adress=''):
-    with open('html/msl/CC/versions.json', 'r', encoding='utf-8') as file:
+    with open(PATH_TO_VERSIONLIST, 'r', encoding='utf-8') as file:
         data = json.load(file)
     _data = data[data_key]
     # 获取可用的版本号列表
@@ -423,12 +423,12 @@ def download_latest_build_mohist(data_key, is_download=False, download_path='', 
         download_url = mdata["url"]
         filename=mdata["name"]
 
-        print('版本'+version+'地址'+download_url)
+        log('版本'+version+'地址'+download_url)
 
         if is_download==True:
             # 检查文件是否已存在
-            if os.path.exists(download_path+'/'+filename):
-                print(f"文件 {filename} 已存在，跳过下载")
+            if os.path.exists(download_path+os.sep+filename):
+                log(f"文件 {filename} 已存在，跳过下载")
             else:
                 # 定义文件名和保存路径
                 _download_path = download_path+"/"+filename
@@ -457,9 +457,9 @@ def download_latest_build_mohist(data_key, is_download=False, download_path='', 
                     # 保存文件
                     with open(_download_path, 'wb') as file:
                         file.write(html_content)
-                    print(f"已下载 {filename} !")
+                    log(f"已下载 {filename} ")
                 else:
-                    print(f"Download failed with status code: {response.status_code}")
+                    log(f"Download failed with status code: {response.status_code}",2)
 
                 #urllib.request.urlretrieve(download_url, _download_path)
                 
@@ -475,7 +475,7 @@ def download_latest_build_mohist(data_key, is_download=False, download_path='', 
                     if int(old_build) != int(build_id):
                         # 删除旧构建文件
                         os.remove(os.path.join(download_path, f"mohist-{version}-{old_build}-server.jar"))
-                        print(f"已删除旧构建文件 mohist-{version}-{old_build}-server.jar")
+                        log(f"已删除旧构建文件 mohist-{version}-{old_build}-server.jar")
             '''
             # 检查是否存在旧的构建文件
             old_builds = glob.glob(download_path+"/"+f"mohist-{version}-*-server.jar")
@@ -489,7 +489,7 @@ def download_latest_build_mohist(data_key, is_download=False, download_path='', 
                         os.remove(download_path+"/"+f"mohist-{version}-{old_build}-server.jar")
                         print(f"已删除旧构建文件 mohist-{version}-{old_build}-server.jar")
             '''
-            _data[version] = ip_adress+'/'+filename
+            _data[version] = ip_adress+os.sep+filename
             # 更新下载链接
             #_data.clear()
             _data.update(_data)
@@ -502,10 +502,10 @@ def download_latest_build_mohist(data_key, is_download=False, download_path='', 
     data[data_key] = ordered_data  # 将修改后的数据存回原始数据字典中
     
     # 写入更新后的 JSON 文件
-    with open('html/msl/CC/versions.json', 'w', encoding='utf-8') as file:
+    with open(PATH_TO_VERSIONLIST, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
-    print('服务端下载/更新完成！')
+    log('服务端下载/更新完成')
 
 '''
 # 定义主函数
@@ -520,7 +520,7 @@ main()
 # 定义总执行函数
 def execute_functions(func_list):
     for i, func in enumerate(func_list):
-        log(f'执行函数 {i + 1}:')
+        log(f'执行函数{i + 1}:{func.__name__}')
         func()
         log('等待下一个函数执行...')
 
@@ -595,7 +595,7 @@ if __name__ == '__main__':
             f.write(f'0 0 * * * python3 {os.getcwd()}/{os.path.basename(__file__)}\n')
 
         # 安装新的Crontab文件
-        sp.run('crontab mycron')
+        sp.run('crontab newcron')
 
     elif USE_SELF_TIME == 1:
         # 计算时间间隔（1天后）
