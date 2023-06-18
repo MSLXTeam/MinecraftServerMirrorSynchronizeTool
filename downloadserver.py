@@ -14,12 +14,15 @@ import subprocess as sp
 import random
 from publib import *
 
-#PATH_TO_VERSIONLIST = 'html/msl/CC/versions.json'
 PATH_TO_VERSIONLIST = 'http://msl.waheal.top/msl/CC/versions.json'
 USE_SELF_TIME = 1
 USE_TEMP_VERSIONLIST = 0
-#DOWNLOAD_ROOT = 'html/files/servers'
 DOWNLOAD_ROOT = f'{os.getcwd()}{os.sep}Downloads'
+IP = requests.get('https://checkip.amazonaws.com').text.strip()
+DOWN_URL_ROOT = 'http://47.243.96.125/files/servers'
+
+#PATH_TO_VERSIONLIST = 'html/msl/CC/versions.json'
+#DOWNLOAD_ROOT = 'html/files/servers'
 
 if not os.path.exists(DOWNLOAD_ROOT):
     os.mkdir(DOWNLOAD_ROOT)
@@ -116,7 +119,7 @@ def get_server_address(url, data_key, downloaded=False, download_path='', file_n
                         log(f"文件 {filename} 已存在,跳过下载",1)
                     else:
                         # 定义文件名和保存路径
-                        _file_name=f'/{file_name}-{version}.jar'
+                        _file_name=f'{os.sep}{file_name}-{version}.jar'
                         _download_path = download_path+_file_name
 
                         # 下载文件
@@ -210,7 +213,7 @@ def download_latest_builds(project_id, data_key, is_download=False, download_pat
                 log(f"文件 {filename} 已存在,跳过下载",1)
             else:
                 # 定义文件名和保存路径
-                _file_name=f'/{project_id}-{version}-{latest_build}.jar'
+                _file_name=f'{os.sep}{project_id}-{version}-{latest_build}.jar'
                 _download_path = download_path+_file_name
                 # 下载构建文件
                 urllib.request.urlretrieve(download_url, _download_path)
@@ -431,7 +434,7 @@ def download_latest_build_mohist(data_key, is_download=False, download_path='', 
                 log(f"文件 {filename} 已存在，跳过下载")
             else:
                 # 定义文件名和保存路径
-                _download_path = download_path+"/"+filename
+                _download_path = download_path+os.sep+filename
                 # 下载构建文件
 
                 # 下载文件
@@ -526,7 +529,7 @@ def execute_functions(func_list):
 
 # 定义获取服务端地址的函数
 def get_server_spigot():
-    get_server_address('https://getbukkit.org/download/spigot', 'Spigot（插件服务端）',True,DOWNLOAD_ROOT,"spigot","http://47.243.96.125/files/servers/spigot")
+    get_server_address('https://getbukkit.org/download/spigot', 'Spigot（插件服务端）',True,DOWNLOAD_ROOT,"spigot",f"{DOWN_URL_ROOT}/spigot")
     #get_server_address('https://getbukkit.org/download/spigot', 'Spigot（插件服务端）')
 
 def get_server_vanilla():
@@ -536,19 +539,19 @@ def get_server_craftbukkit():
     get_server_address('https://getbukkit.org/download/craftbukkit', 'CraftBukkit（插件服务端）')
 
 def get_server_paper():
-    download_latest_builds('paper', 'Paper（插件服务端）',True,DOWNLOAD_ROOT,"http://47.243.96.125/files/servers/paper")
+    download_latest_builds('paper', 'Paper（插件服务端）',True,DOWNLOAD_ROOT,f"{DOWN_URL_ROOT}/paper")
     #download_latest_builds('paper', 'Paper（插件服务端）')
 
 def get_server_purpur():
-    download_latest_builds_purpur('Purpur（插件服务端）',True,DOWNLOAD_ROOT,"http://47.243.96.125/files/servers/purpur")
+    download_latest_builds_purpur('Purpur（插件服务端）',True,DOWNLOAD_ROOT,f"{DOWN_URL_ROOT}/purpur")
     #download_latest_builds_purpur('Purpur（插件服务端）')
 
 def get_server_folia():
-    download_latest_builds('folia', 'Folia（多线程插件服务端）',True,DOWNLOAD_ROOT,"http://47.243.96.125/files/servers/folia")
+    download_latest_builds('folia', 'Folia（多线程插件服务端）',True,DOWNLOAD_ROOT,f"{DOWN_URL_ROOT}/folia")
     #download_latest_builds('folia', 'Folia（多线程插件服务端）')
 
 def get_server_velocity():
-    download_latest_builds('velocity', 'Velocity（代理服务端，单端勿用）',True,DOWNLOAD_ROOT,"http://47.243.96.125/files/servers/velocity")
+    download_latest_builds('velocity', 'Velocity（代理服务端，单端勿用）',True,DOWNLOAD_ROOT,f"{DOWN_URL_ROOT}/velocity")
     #download_latest_builds('velocity', 'Velocity（代理服务端，单端勿用）')
 
 def get_server_forge():
@@ -558,7 +561,7 @@ def get_server_fabric():
     download_latest_build_fabric('Fabric（模组服务端）')
 
 def get_server_mohist():
-    download_latest_build_mohist('Mohist（模组插件二合一服务端）',True,DOWNLOAD_ROOT,"http://47.243.96.125/files/servers/mohist")
+    download_latest_build_mohist('Mohist（模组插件二合一服务端）',True,DOWNLOAD_ROOT,f"{DOWN_URL_ROOT}/mohist")
     #download_latest_build_mohist('Mohist（模组插件二合一服务端）')
 
 # Paper服务端示例
@@ -576,6 +579,7 @@ if __name__ == '__main__':
 
     try:
         is_url()
+        log("准备开始执行函数")
         execute_functions(functions)
     except ConnectionError:
         log('连接错误,请检查网络状态,程序即将退出',2)
@@ -592,7 +596,7 @@ if __name__ == '__main__':
 
         # 输出每日执行一次的指令到新的Crontab文件里
         with open('newcron', 'a') as f:
-            f.write(f'0 0 * * * python3 {os.getcwd()}/{os.path.basename(__file__)}\n')
+            f.write(f'0 0 * * * python3 {os.getcwd()}{os.sep}{os.path.basename(__file__)}\n')
 
         # 安装新的Crontab文件
         sp.run('crontab newcron')
